@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tuan_080910/app/page/auth/forgetPassword.dart';
 import 'package:tuan_080910/app/page/auth/login.dart';
-
 void main() {
   runApp(const MainApp());
 }
@@ -10,11 +10,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
-      // initialRoute: "/",
-      // onGenerateRoute: AppRoute.onGenerateRoute,  -> su dung auto route (pushName)
+      // Thiết lập màn hình chính là LoginScreen
+      home: const LoginScreen(),
+      // Định nghĩa các tuyến đường
+      routes: {
+        '/forgot_password': (context) => ForgetPasswordScreen(),
+        // Các tuyến đường khác nếu cần
+      },
     );
   }
 }

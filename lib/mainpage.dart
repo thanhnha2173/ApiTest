@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:tuan_080910/app/model/category.dart';
+import 'package:tuan_080910/app/model/phonecategory.dart';
 import 'package:tuan_080910/app/model/user.dart';
 import 'package:tuan_080910/app/page/detail.dart';
 import 'package:tuan_080910/app/route/page1.dart';
@@ -132,7 +133,7 @@ class _MainpageState extends State<Mainpage> {
                 Navigator.pop(context);
                 _selectedIndex = 0;
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Page1()));
+                    MaterialPageRoute(builder: (context) => const PhoneCategoryScreen()));
               },
             ),
             ListTile(

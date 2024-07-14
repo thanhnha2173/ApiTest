@@ -1,9 +1,9 @@
-import 'package:tuan_080910/app/config/const.dart';
-import 'package:tuan_080910/app/data/api.dart';
-import '../register.dart';
-import 'package:tuan_080910/mainpage.dart';
 import 'package:flutter/material.dart';
+import 'package:tuan_080910/app/data/api.dart';
+import 'package:tuan_080910/mainpage.dart';
+import '../register.dart';
 import '../../data/sharepre.dart';
+import '../../config/const.dart'; // Import file constants
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,17 +15,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController accountController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  // Hàm xử lý đăng nhập
   login() async {
-    //lấy token (lưu share_preference)
-    String token = await APIRepository()
-        .login(accountController.text, passwordController.text);
-    var user = await APIRepository().current(token);
-    // save share
-    saveUser(user);
-    //
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Mainpage()));
-    return token;
+    String token = await APIRepository().login(accountController.text, passwordController.text);
+    if (token != "Unauthorized: Invalid credentials or token.") {
+      var user = await APIRepository().current(token);
+      saveUser(user); // Lưu thông tin người dùng vào SharedPreferences
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const Mainpage()));
+    } else {
+      print("Login failed: Invalid credentials or token.");
+      // Xử lý khi đăng nhập không thành công
+    }
   }
 
   @override
@@ -43,9 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   Image.asset(
-                    urlLogo,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.image),
+                    urlLogo, // Sử dụng biến urlLogo từ file constants
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.image),
                   ),
                   const Text(
                     "LOGIN INFORMATION",
@@ -71,25 +71,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     children: [
                       Expanded(
-                          child: ElevatedButton(
-                        onPressed: login,
-                        child: const Text("Login"),
-                      )),
-                      const SizedBox(
-                        width: 16,
+                        child: ElevatedButton(
+                          onPressed: login,
+                          child: const Text("Login"),
+                        ),
                       ),
+                      const SizedBox(width: 16),
                       Expanded(
-                          child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Register()));
-                        },
-                        child: const Text("Register"),
-                      ))
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/forgot_password'); // Chuyển hướng sang màn hình quên mật khẩu
+                          },
+                          child: const Text("Forgot Password"), // Đổi nút "Register" thành "Forgot Password"
+                        ),
+                      ),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Register()));
+                    },
+                    child: const Text(
+                      "Don't have an account? Register here",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
                 ],
               ),
             ),

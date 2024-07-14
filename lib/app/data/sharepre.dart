@@ -7,12 +7,12 @@ import '../model/user.dart';
 Future<bool> saveUser(User objUser) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String strUser = jsonEncode(objUser);
+    String strUser = jsonEncode(objUser.toJson());
     prefs.setString('user', strUser);
     print("Luu thanh cong: $strUser");
     return true;
   } catch (e) {
-    print(e);
+    print("Error saving user: $e");
     return false;
   }
 }
@@ -20,7 +20,8 @@ Future<bool> saveUser(User objUser) async {
 Future<bool> logOut(BuildContext context) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('user', '');
+    await prefs.remove('user');
+    await prefs.remove('token'); // Xóa token khi đăng xuất
     print("Logout thành công");
     Navigator.pushAndRemoveUntil(
         context,
@@ -28,7 +29,7 @@ Future<bool> logOut(BuildContext context) async {
         (route) => false);
     return true;
   } catch (e) {
-    print(e);
+    print("Error during logout: $e");
     return false;
   }
 }
